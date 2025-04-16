@@ -1,0 +1,24 @@
+FROM ghcr.io/actions/actions-runner:latest
+
+# The base image will be using this user
+ARG BASE_USER runner
+
+# Swtich to root to install packages
+USER root
+
+# Set non-interactive mode for apt-get to avoid prompts during installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+###
+# This section is AI generated based on container-image-requirements.md
+###
+
+###
+# End of AI generated section
+###
+
+# Reset DEBIAN_FRONTEND
+ENV DEBIAN_FRONTEND=
+
+# Switch back to base image user
+USER ${BASE_USER}
