@@ -1,19 +1,19 @@
 # Fat Actions Runner
 This container image is intended to be used by a self-hosted runner with the Actions Runner Controller (ARC) in Kubernetes.
 See [Managing self-hosted runners with Actions Runner Controller](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners-with-actions-runner-controller).
-It is built upon the official GitHub Actions Runner image: `ghcr.io/actions/actions-runner:latest` (see [Dockerfile for actions-runner](https://github.com/actions/runner/tree/main/images))
+It is built upon the official GitHub Actions Runner image: `ghcr.io/actions/actions-runner:latest` (see [Dockerfile for actions-runner](https://github.com/actions/runner/tree/main/images)), 
 but with more tools.
 
 ## Building the Image
 To build the container image locally:
 
-```bash
+```bash 
 docker build -t actions-runner-fat:latest image/.
 ```
 
 ## Using with Actions Runner Controller (ARC)
 
-To use this image with ARC, update your Helm install command to use this images instead of the default. For example:
+To use this image with ARC, update your Helm install command for you scale set use this image instead of the default. For example:
 ```bash
 INSTALLATION_NAME="arc-runner-set"
 NAMESPACE="arc-runners"
