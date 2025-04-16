@@ -1,7 +1,7 @@
 FROM ghcr.io/actions/actions-runner:latest
 
 # The base image will be using this user
-ARG BASE_USER runner
+ARG BASE_USER=runner
 
 # Swtich to root to install packages
 USER root
