@@ -6,7 +6,7 @@ LABEL org.opencontainers.image.description="GitHub Actions runner with additiona
 # Swtich to root to be able to install packages
 USER root
 
-RUN apt-get update && sudo apt-get install -y \
+RUN apt-get update && apt-get install -y \
     curl \
     git \
     jq \

@@ -1,17 +1,16 @@
 # actions-runner-fat
-This container image is intended to be used by self-hosted GitHub Actions runner in Kubernetes. See [Managing self-hosted runners with Actions Runner Controller](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners-with-actions-runner-controller).
-
+This container image is intended to be used by self-hosted GitHub Actions runner in Kubernetes.
+See [Managing self-hosted runners with Actions Runner Controller](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners-with-actions-runner-controller).
 
 ## Base Image
-
-This image builds upon the official GitHub Actions runner image: `ghcr.io/actions/actions-runner:latest`. See [Dockerfile for actions/runner](https://github.com/actions/runner/tree/main/images).
+This image builds upon the official GitHub Actions runner image: `ghcr.io/actions/actions-runner:latest`. See [Dockerfile for actions-runner](https://github.com/actions/runner/tree/main/images).
 
 ## Building the Image
 
 To build the container image locally:
 
 ```bash
-docker build -t actions-runner-fat:latest image/
+docker build -t actions-runner-fat:latest image/.
 ```
 
 ## Using with Actions Runner Controller (ARC)
