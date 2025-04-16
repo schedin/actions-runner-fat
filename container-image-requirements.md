@@ -22,6 +22,4 @@ Use the file `image/Dockerfile_template` as a base for generating the image/Dock
 1. Do not include Minikube and other tools like that (for example Kind). It does not fit in a container image.
 1. Some tools (like yq) need a custom installation.
 1. Don't include docker, docker-compose, docker-buildx-plugin or docker-buildx-plugin because it does not work well inside a container.
-
-## Podman and Skopeo
-1. Include Podman and Skopeo. Also include the podman-docker package to emulate docker commands to work with Podman.
+1. Don't add any installation for podman or skopeo. They are already included the template Dockerfile.

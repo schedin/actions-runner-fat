@@ -17,6 +17,11 @@ ENV DEBIAN_FRONTEND=noninteractive
 # End of AI generated section
 ###
 
+RUN apt-get update -y \
+    && apt-get install -y --no-install-recommends \
+    podman skopeo podman-docker \
+    && rm -rf /var/lib/apt/lists/*
+
 # Reset DEBIAN_FRONTEND
 ENV DEBIAN_FRONTEND=
 
