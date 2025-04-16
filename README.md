@@ -28,3 +28,7 @@ helm upgrade --install "${INSTALLATION_NAME}" \
     --set template.spec.containers[0].command[0]="/home/runner/run.sh" \
     oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
 ```
+
+## Container vs. VM Considerations
+
+This container is designed to be a lightweight alternative to the full GitHub-hosted runners while still providing essential tools for CI/CD workflows. Unlike the complete GitHub Actions VM images which include multiple versions of each tool and language, this container focuses on providing the latest stable version of each tool to keep the image size manageable.
