@@ -13,7 +13,7 @@ docker build -t actions-runner-fat:latest image/.
 
 ## Using with Actions Runner Controller (ARC)
 
-To use this image with ARC, update your Helm install command for you scale set use this image instead of the default. For example:
+To use this image with ARC, update your Helm install command for you scale set to this image instead of the default. For example:
 ```bash
 INSTALLATION_NAME="arc-runner-set"
 NAMESPACE="arc-runners"
