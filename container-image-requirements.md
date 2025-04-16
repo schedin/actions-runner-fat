@@ -1,9 +1,9 @@
 # Container image requirements
 
 ## Overview
-This document is to be consumed by an AI coding assistent to update the `image/Dockerfile` for the container image. Make sure the AI assistent has web access to be able to download the official GitHub runner-images VM description document (called VM document).
+This document is to be consumed by an AI coding assistant to update the `image/Dockerfile` for the container image. Make sure the AI assistant has web access to be able to download the official GitHub runner-images VM description document (called VM document).
 
-Suggested prompt to the AI coding assistent:
+Suggested prompt to the AI coding assistant:
 ```
 Update image/Dockerfile using this requirements file.
 ```
