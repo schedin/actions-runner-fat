@@ -19,3 +19,4 @@ Update image/Dockerfile using this requirements file.
 1. Do not make any last `apt-get clean` step. Instead make sure each RUN command run the recommended clean (like "rm -rf /var/lib/apt/lists/*") at the end of the command.
 1. Do not have a separate dedicated `apt-get update -y` RUN command, instead include it at the start of a RUN command that runs `apt-get install`.
 1. Don't forget to install helm.
+1. Include a comment at the top of the file to indicate that this was AI generated based on this requirements file.
