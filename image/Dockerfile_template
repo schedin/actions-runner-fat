@@ -18,9 +18,22 @@ ENV DEBIAN_FRONTEND=noninteractive
 ###
 
 RUN apt-get update -y \
-    && apt-get install -y --no-install-recommends \
+    && apt-get install -y \
     podman skopeo podman-docker \
     && rm -rf /var/lib/apt/lists/*
+
+RUN chmod 0755 /usr/bin/newuidmap /usr/bin/newgidmap && \
+    setcap cap_setuid=ep /usr/bin/newuidmap && \
+    setcap cap_setgid=ep /usr/bin/newgidmap
+
+COPY etc_containers_containers.conf /etc/containers/containers.conf
+COPY etc_containers_storage.conf /etc/containers/storage.conf
+RUN mkdir -p /home/${BASE_USER}/.config/containers/ && chown -R ${BASE_USER}:${BASE_USER} /home/${BASE_USER}/.config/
+COPY user_.config_containers_containers.conf /home/${BASE_USER}/.config/containers/containers.conf
+
+RUN mkdir -p /var/lib/shared/overlay-images /var/lib/shared/overlay-layers /var/lib/shared/vfs-images /var/lib/shared/vfs-layers; touch /var/lib/shared/overlay-images/images.lock; touch /var/lib/shared/overlay-layers/layers.lock; touch /var/lib/shared/vfs-images/images.lock; touch /var/lib/shared/vfs-layers/layers.lock
+
+ENV _CONTAINERS_USERNS_CONFIGURED=""
 
 # Reset DEBIAN_FRONTEND
 ENV DEBIAN_FRONTEND=
