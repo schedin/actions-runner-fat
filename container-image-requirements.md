@@ -9,6 +9,7 @@ Update image/Dockerfile using this requirements file.
 ```
 
 ## Requerments
+1. Include a comment at the top of the file to indicate that this was AI generated based on this requirements file.
 1. Use the latest official GitHub Actions runner image (`ghcr.io/actions/actions-runner:latest`) as the base.
 1. Temporary switch to user `root` to enable package installation and switch back to the base image user `runner` at the end.
 1. Set `DEBIAN_FRONTEND=noninteractive` during package installations to prevent interactive prompts and unset it at the end.
@@ -19,4 +20,4 @@ Update image/Dockerfile using this requirements file.
 1. Do not make any last `apt-get clean` step. Instead make sure each RUN command run the recommended clean (like "rm -rf /var/lib/apt/lists/*") at the end of the command.
 1. Do not have a separate dedicated `apt-get update -y` RUN command, instead include it at the start of a RUN command that runs `apt-get install`.
 1. Don't forget to install helm.
-1. Include a comment at the top of the file to indicate that this was AI generated based on this requirements file.
+1. Do not include Minikube and other tools like that (for example Kind). It does not fit in a container image.
