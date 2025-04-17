@@ -16,14 +16,17 @@ ENV DEBIAN_FRONTEND=noninteractive
 # This section is AI generated based on container-image-requirements.md
 ###
 
-# Install base packages
+# Install main packages
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     ansible \
+    apt-transport-https \
     apt-utils \
+    aria2 \
     autoconf \
     automake \
     binutils \
     bison \
+    brotli \
     build-essential \
     bzip2 \
     ca-certificates \
@@ -31,9 +34,8 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
     cmake \
     coreutils \
     curl \
-    dbus \
+    dirmngr \
     dnsutils \
-    dpkg \
     dpkg-dev \
     fakeroot \
     file \
@@ -42,21 +44,27 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
     ftp \
     g++ \
     gcc \
-    gettext \
+    gfortran \
     git \
+    git-ftp \
+    git-lfs \
     gnupg2 \
     haveged \
-    imagemagick \
     iproute2 \
     iputils-ping \
     jq \
-    libc6-dev \
-    liblttng-ust1 \
-    libsqlite3-dev \
+    libcurl4-openssl-dev \
+    libgbm-dev \
+    libgconf-2-4 \
+    libgsl-dev \
+    libicu-dev \
+    liblttng-ust-dev \
     libssl-dev \
     libtool \
+    libunwind8 \
+    libxkbfile-dev \
+    libxml2-dev \
     libyaml-dev \
-    locales \
     lsb-release \
     lz4 \
     m4 \
@@ -67,33 +75,31 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
     netcat-openbsd \
     openssh-client \
     p7zip-full \
+    p7zip-rar \
     parallel \
     patchelf \
     pigz \
     pkg-config \
-    python-is-python3 \
     python3 \
     python3-dev \
     python3-pip \
-    python3-setuptools \
-    python3-venv \
+    python-is-python3 \
+    rpm \
     rsync \
     shellcheck \
-    sphinxsearch \
+    software-properties-common \
     sqlite3 \
     ssh \
     sshpass \
-    subversion \
-    sudo \
+    swig \
     tar \
+    telnet \
     texinfo \
     time \
-    tree \
     tzdata \
     unzip \
     upx \
     wget \
-    xvfb \
     xz-utils \
     zip \
     zlib1g-dev \
@@ -102,52 +108,37 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
 
 # Install OpenJDK
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    default-jdk \
+    openjdk-17-jdk \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Node.js LTS
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get update -y \
-    && apt-get install -y nodejs \
+    && apt-get update -y && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
-
-# Install Helm
-RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 \
-    && chmod 700 get_helm.sh \
-    && ./get_helm.sh \
-    && rm get_helm.sh
 
 # Install AWS CLI
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
     && unzip awscliv2.zip \
     && ./aws/install \
-    && rm -rf aws awscliv2.zip
+    && rm -rf awscliv2.zip aws
 
 # Install Azure CLI
-RUN curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null \
-    && echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/azure-cli.list \
-    && apt-get update -y \
-    && apt-get install -y azure-cli \
+RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Google Cloud CLI
-RUN curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-latest-linux-x86_64.tar.gz \
-    && tar -xf google-cloud-cli-latest-linux-x86_64.tar.gz \
-    && ./google-cloud-sdk/install.sh --quiet \
-    && rm google-cloud-cli-latest-linux-x86_64.tar.gz \
-    && ln -s /google-cloud-sdk/bin/gcloud /usr/local/bin/gcloud
+RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
+    && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - \
+    && apt-get update -y && apt-get install -y google-cloud-cli \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Helm
+RUN curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install yq
 RUN wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 \
     && chmod +x /usr/local/bin/yq
-
-# Install GitHub CLI
-RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
-    && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-    && apt-get update -y \
-    && apt-get install -y gh \
-    && rm -rf /var/lib/apt/lists/*
 
 ###
 # End of AI generated section
