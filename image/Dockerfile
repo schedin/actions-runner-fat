@@ -155,6 +155,7 @@ RUN echo "${BASE_USER}:1002:64534" > /etc/subuid && \
 ARG _REPO_URL="https://raw.githubusercontent.com/containers/image_build/refs/heads/main/podman"
 ADD $_REPO_URL/containers.conf /etc/containers/containers.conf
 ADD $_REPO_URL/podman-containers.conf /home/${BASE_USER}/.config/containers/containers.conf
+COPY etc_containers_storage.conf /etc/containers/storage.conf
 
 RUN mkdir -p /home/${BASE_USER}/.local/share/containers && \
     chown ${BASE_USER}:${BASE_USER} -R /home/${BASE_USER} && \
