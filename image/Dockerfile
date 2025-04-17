@@ -16,102 +16,146 @@ ENV DEBIAN_FRONTEND=noninteractive
 # This section is AI generated based on container-image-requirements.md
 ###
 
-# Install essential packages and dependencies
-RUN apt-get update -y && \
-    apt-get install -y --no-install-recommends \
-    # Basic tools
-    apt-utils curl wget ca-certificates gnupg2 lsb-release \
-    # Version control
-    git git-lfs mercurial \
-    # Build tools
-    build-essential cmake make autoconf automake libtool pkg-config \
-    # Compression tools
-    bzip2 gzip p7zip-full p7zip-rar unzip xz-utils zstd \
-    # Text processing
-    jq xmlstarlet \
-    # Network tools
-    curl iputils-ping netcat net-tools openssh-client rsync ssh sshpass wget \
-    # File tools
-    file tree \
-    # Shell tools
-    bash-completion shellcheck \
-    # Development libraries
-    libssl-dev libyaml-dev libsqlite3-dev \
-    # Database tools
-    sqlite3 \
-    # Java Development
-    openjdk-17-jdk openjdk-17-jre \
-    # Python
-    python3 python3-pip python3-dev python-is-python3 \
-    # Ruby
-    ruby ruby-dev \
-    # Perl
-    perl \
-    # Node.js and npm (latest LTS)
-    nodejs npm \
-    # Additional development tools
-    ninja-build \
-    # Utilities
-    parallel pigz patchelf upx tzdata locales \
-    # SCM & CI/CD tools
+# Install basic packages and dependencies
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    # Basic utils
+    apt-utils \
+    apt-transport-https \
+    bzip2 \
+    ca-certificates \
+    curl \
+    dirmngr \
+    file \
+    fonts-noto-color-emoji \
+    gnupg2 \
+    wget \
+    unzip \
+    zip \
+    xz-utils \
+    # Version control systems
+    git \
+    git-lfs \
+    git-ftp \
+    mercurial \
     subversion \
-    # Build system
+    # Network tools
+    dnsutils \
+    iproute2 \
+    iputils-ping \
+    netcat-openbsd \
+    net-tools \
+    openssh-client \
+    sshpass \
+    rsync \
+    # Compression
+    brotli \
+    gzip \
+    p7zip-full \
+    p7zip-rar \
+    parallel \
+    pigz \
+    zstd \
+    # Development
+    autoconf \
+    automake \
+    binutils \
+    bison \
+    build-essential \
+    cmake \
+    dpkg-dev \
+    fakeroot \
+    flex \
+    g++ \
+    gcc \
+    jq \
+    libtool \
+    lsb-release \
+    make \
     ninja-build \
-    # Misc
-    aria2 bison flex lsof mediainfo RPM && \
-    rm -rf /var/lib/apt/lists/*
+    patchelf \
+    pkg-config \
+    shellcheck \
+    # Python
+    python3 \
+    python3-dev \
+    python3-pip \
+    python3-venv \
+    python-is-python3 \
+    # Database
+    libsqlite3-dev \
+    sqlite3 \
+    # Ruby 
+    ruby \
+    ruby-dev \
+    # Other tools
+    aria2 \
+    ftp \
+    tree \
+    tzdata \
+    upx \
+    xvfb \
+    && rm -rf /var/lib/apt/lists/*
 
-# Set up locales
-RUN locale-gen en_US.UTF-8
+# Install Node.js (latest LTS)
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get update -y \
+    && apt-get install -y nodejs \
+    && npm install -g npm@latest \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install OpenJDK
+RUN apt-get update -y \
+    && apt-get install -y --no-install-recommends \
+    openjdk-17-jdk \
+    openjdk-17-jre \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install PowerShell
+RUN curl -fsSL https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb -o packages-microsoft-prod.deb \
+    && dpkg -i packages-microsoft-prod.deb \
+    && rm packages-microsoft-prod.deb \
+    && apt-get update -y \
+    && apt-get install -y --no-install-recommends powershell \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install Helm
-RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 && \
-    chmod +x get_helm.sh && \
-    ./get_helm.sh && \
-    rm get_helm.sh && \
-    helm version
+RUN curl -fsSL https://baltocdn.com/helm/signing.asc | gpg --dearmor | tee /usr/share/keyrings/helm.gpg > /dev/null \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | tee /etc/apt/sources.list.d/helm-stable-debian.list \
+    && apt-get update -y \
+    && apt-get install -y --no-install-recommends helm \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install Kubectl
-RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
-    chmod +x kubectl && \
-    mv kubectl /usr/local/bin/ && \
-    kubectl version --client
-
-# Install yq (yaml processor)
-RUN wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 && \
-    chmod +x /usr/local/bin/yq
+# Install yq
+RUN wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 \
+    && chmod +x /usr/local/bin/yq
 
 # Install GitHub CLI
-RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
-    chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg && \
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
-    apt-get update -y && \
-    apt-get install -y gh && \
-    rm -rf /var/lib/apt/lists/*
+RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+    && apt-get update -y \
+    && apt-get install -y --no-install-recommends gh \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install AWS CLI
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
-    unzip awscliv2.zip && \
-    ./aws/install && \
-    rm -rf aws awscliv2.zip
+RUN curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
+    && unzip -q awscliv2.zip \
+    && ./aws/install \
+    && rm -rf awscliv2.zip aws
 
 # Install Azure CLI
-RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash && \
-    rm -rf /var/lib/apt/lists/*
+RUN curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null \
+    && echo "deb [arch=$(dpkg --print-architecture)] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/azure-cli.list \
+    && apt-get update -y \
+    && apt-get install -y --no-install-recommends azure-cli \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install Google Cloud CLI
-RUN curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-latest-linux-x86_64.tar.gz && \
-    tar -xf google-cloud-cli-latest-linux-x86_64.tar.gz && \
-    ./google-cloud-sdk/install.sh --quiet && \
-    rm -rf google-cloud-cli-latest-linux-x86_64.tar.gz
-
-# Install additional Python tools
-RUN pip3 install --no-cache-dir pipx && \
-    pipx install yamllint
-
-# Set environment variables
-ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-ENV PATH=$PATH:$JAVA_HOME/bin
+RUN curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
+    && apt-get update -y \
+    && apt-get install -y --no-install-recommends google-cloud-cli \
+    && rm -rf /var/lib/apt/lists/*
 
 ###
 # End of AI generated section
