@@ -16,114 +16,126 @@ ENV DEBIAN_FRONTEND=noninteractive
 # This section is AI generated based on container-image-requirements.md
 ###
 
-# Install basic packages and dependencies
+# Install base packages
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    # Basic utils
+    ansible \
     apt-utils \
-    apt-transport-https \
-    bzip2 \
-    ca-certificates \
-    curl \
-    dirmngr \
-    file \
-    fonts-noto-color-emoji \
-    gnupg2 \
-    wget \
-    unzip \
-    zip \
-    xz-utils \
-    # Version control systems
-    git \
-    git-lfs \
-    git-ftp \
-    mercurial \
-    subversion \
-    # Network tools
-    dnsutils \
-    iproute2 \
-    iputils-ping \
-    netcat-openbsd \
-    net-tools \
-    openssh-client \
-    sshpass \
-    rsync \
-    # Compression
-    brotli \
-    gzip \
-    p7zip-full \
-    p7zip-rar \
-    parallel \
-    pigz \
-    zstd \
-    # Development
     autoconf \
     automake \
     binutils \
     bison \
     build-essential \
+    bzip2 \
+    ca-certificates \
+    clang \
     cmake \
+    coreutils \
+    curl \
+    dbus \
+    dnsutils \
+    dpkg \
     dpkg-dev \
     fakeroot \
+    file \
     flex \
+    fonts-noto-color-emoji \
+    ftp \
     g++ \
     gcc \
+    gettext \
+    git \
+    gnupg2 \
+    haveged \
+    imagemagick \
+    iproute2 \
+    iputils-ping \
     jq \
+    libc6-dev \
+    liblttng-ust1 \
+    libsqlite3-dev \
+    libssl-dev \
     libtool \
+    libyaml-dev \
+    locales \
     lsb-release \
+    lz4 \
+    m4 \
     make \
-    ninja-build \
+    mediainfo \
+    mercurial \
+    net-tools \
+    netcat-openbsd \
+    openssh-client \
+    p7zip-full \
+    parallel \
     patchelf \
+    pigz \
     pkg-config \
-    shellcheck \
-    # Python
+    python-is-python3 \
     python3 \
     python3-dev \
     python3-pip \
+    python3-setuptools \
     python3-venv \
-    python-is-python3 \
-    # Database
-    libsqlite3-dev \
+    rsync \
+    shellcheck \
+    sphinxsearch \
     sqlite3 \
-    # Ruby 
-    ruby \
-    ruby-dev \
-    # Other tools
-    aria2 \
-    ftp \
+    ssh \
+    sshpass \
+    subversion \
+    sudo \
+    tar \
+    texinfo \
+    time \
     tree \
     tzdata \
+    unzip \
     upx \
+    wget \
     xvfb \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install Node.js (latest LTS)
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get update -y \
-    && apt-get install -y nodejs \
-    && npm install -g npm@latest \
+    xz-utils \
+    zip \
+    zlib1g-dev \
+    zstd \
     && rm -rf /var/lib/apt/lists/*
 
 # Install OpenJDK
-RUN apt-get update -y \
-    && apt-get install -y --no-install-recommends \
-    openjdk-17-jdk \
-    openjdk-17-jre \
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    default-jdk \
     && rm -rf /var/lib/apt/lists/*
 
-# Install PowerShell
-RUN curl -fsSL https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb -o packages-microsoft-prod.deb \
-    && dpkg -i packages-microsoft-prod.deb \
-    && rm packages-microsoft-prod.deb \
+# Install Node.js LTS
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get update -y \
-    && apt-get install -y --no-install-recommends powershell \
+    && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Helm
-RUN curl -fsSL https://baltocdn.com/helm/signing.asc | gpg --dearmor | tee /usr/share/keyrings/helm.gpg > /dev/null \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | tee /etc/apt/sources.list.d/helm-stable-debian.list \
+RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 \
+    && chmod 700 get_helm.sh \
+    && ./get_helm.sh \
+    && rm get_helm.sh
+
+# Install AWS CLI
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
+    && unzip awscliv2.zip \
+    && ./aws/install \
+    && rm -rf aws awscliv2.zip
+
+# Install Azure CLI
+RUN curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null \
+    && echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/azure-cli.list \
     && apt-get update -y \
-    && apt-get install -y --no-install-recommends helm \
+    && apt-get install -y azure-cli \
     && rm -rf /var/lib/apt/lists/*
+
+# Install Google Cloud CLI
+RUN curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-latest-linux-x86_64.tar.gz \
+    && tar -xf google-cloud-cli-latest-linux-x86_64.tar.gz \
+    && ./google-cloud-sdk/install.sh --quiet \
+    && rm google-cloud-cli-latest-linux-x86_64.tar.gz \
+    && ln -s /google-cloud-sdk/bin/gcloud /usr/local/bin/gcloud
 
 # Install yq
 RUN wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 \
@@ -134,27 +146,7 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | d
     && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
     && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
     && apt-get update -y \
-    && apt-get install -y --no-install-recommends gh \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install AWS CLI
-RUN curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
-    && unzip -q awscliv2.zip \
-    && ./aws/install \
-    && rm -rf awscliv2.zip aws
-
-# Install Azure CLI
-RUN curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null \
-    && echo "deb [arch=$(dpkg --print-architecture)] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/azure-cli.list \
-    && apt-get update -y \
-    && apt-get install -y --no-install-recommends azure-cli \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install Google Cloud CLI
-RUN curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg \
-    && echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
-    && apt-get update -y \
-    && apt-get install -y --no-install-recommends google-cloud-cli \
+    && apt-get install -y gh \
     && rm -rf /var/lib/apt/lists/*
 
 ###
@@ -215,7 +207,7 @@ RUN chmod 0755 /usr/bin/newuidmap /usr/bin/newgidmap && \
 # While running "skopeo inspect containers-storage:alpine" you might get
 # "Error during unshare(...): Operation not permitted".
 # Setting CAP_SYS_ADMIN on skopeo binary allows it to access the podman image storage.
-RUN sudo setcap cap_sys_admin+ep /usr/bin/skopeo
+RUN setcap cap_sys_admin+ep /usr/bin/skopeo
 
 ENV _CONTAINERS_USERNS_CONFIGURED=""
 
