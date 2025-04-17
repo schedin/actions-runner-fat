@@ -128,6 +128,10 @@ RUN curl https://sh.rustup.rs -sSf | sh -s -- -y \
     && echo 'source $HOME/.cargo/env' >> $HOME/.bashrc
 
 ###
+# End of AI generated section
+###
+
+###
 # Podman installation
 ###
 RUN apt-get update -y \
