@@ -26,7 +26,7 @@ Place each package on its own line. Sort the packages in alphabetical order. Do 
 1. Don't include docker, docker-compose, docker-buildx-plugin or docker-buildx-plugin because it does not work well inside a container.
 1. Don't add any installation for podman or skopeo. They are already included the template Dockerfile.
 1. For netcat, use the `netcat-openbsd` package.
-1. Do not include libgconf
+1. Do not install libgconf nor libgconf-2-4
 1. Include AWS CLI, Azure CLI and Google Cloud CLI
 1. Include Ansible.
 1. Node.js (latest LTS)

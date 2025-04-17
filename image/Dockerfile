@@ -16,17 +16,18 @@ ENV DEBIAN_FRONTEND=noninteractive
 # This section is AI generated based on container-image-requirements.md
 ###
 
-# Install main packages
-RUN apt-get update -y && apt-get install -y --no-install-recommends \
+# Install packages from Ubuntu repositories
+RUN apt-get update -y && \
+    apt-get install -y --no-install-recommends \
     ansible \
     apt-transport-https \
     apt-utils \
     aria2 \
     autoconf \
     automake \
+    bash \
     binutils \
     bison \
-    brotli \
     build-essential \
     bzip2 \
     ca-certificates \
@@ -34,38 +35,29 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
     cmake \
     coreutils \
     curl \
-    dirmngr \
+    dbus \
+    default-jdk \
     dnsutils \
+    dpkg \
     dpkg-dev \
     fakeroot \
     file \
+    findutils \
     flex \
     fonts-noto-color-emoji \
     ftp \
     g++ \
     gcc \
-    gfortran \
-    git \
-    git-ftp \
-    git-lfs \
     gnupg2 \
     haveged \
     iproute2 \
     iputils-ping \
     jq \
-    libcurl4-openssl-dev \
-    libgbm-dev \
-    libgconf-2-4 \
-    libgsl-dev \
-    libicu-dev \
-    liblttng-ust-dev \
+    libsqlite3-dev \
     libssl-dev \
     libtool \
-    libunwind8 \
-    libxkbfile-dev \
-    libxml2-dev \
     libyaml-dev \
-    lsb-release \
+    locales \
     lz4 \
     m4 \
     make \
@@ -80,65 +72,64 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
     patchelf \
     pigz \
     pkg-config \
+    python-is-python3 \
     python3 \
     python3-dev \
     python3-pip \
-    python-is-python3 \
+    python3-setuptools \
+    python3-venv \
     rpm \
     rsync \
     shellcheck \
-    software-properties-common \
     sqlite3 \
     ssh \
     sshpass \
-    swig \
     tar \
-    telnet \
-    texinfo \
-    time \
+    tree \
     tzdata \
     unzip \
     upx \
     wget \
+    xvfb \
     xz-utils \
     zip \
     zlib1g-dev \
-    zstd \
-    && rm -rf /var/lib/apt/lists/*
+    zstd && \
+    rm -rf /var/lib/apt/lists/*
 
-# Install OpenJDK
-RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    openjdk-17-jdk \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install Node.js LTS
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get update -y && apt-get install -y nodejs \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install AWS CLI
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
-    && unzip awscliv2.zip \
-    && ./aws/install \
-    && rm -rf awscliv2.zip aws
-
-# Install Azure CLI
-RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install Google Cloud CLI
-RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
-    && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - \
-    && apt-get update -y && apt-get install -y google-cloud-cli \
-    && rm -rf /var/lib/apt/lists/*
+# Install Node.js (LTS version)
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get update -y && \
+    apt-get install -y nodejs && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install Helm
-RUN curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash \
-    && rm -rf /var/lib/apt/lists/*
+RUN curl -fsSL https://baltocdn.com/helm/signing.asc | gpg --dearmor | tee /usr/share/keyrings/helm.gpg > /dev/null && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | tee /etc/apt/sources.list.d/helm-stable-debian.list && \
+    apt-get update -y && \
+    apt-get install -y helm && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install AWS CLI
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip && \
+    ./aws/install && \
+    rm -rf aws awscliv2.zip
+
+# Install Azure CLI
+RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Google Cloud CLI
+RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
+    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && \
+    apt-get update -y && \
+    apt-get install -y google-cloud-cli && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install yq
-RUN wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 \
-    && chmod +x /usr/local/bin/yq
+RUN wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 && \
+    chmod +x /usr/local/bin/yq
 
 ###
 # End of AI generated section
