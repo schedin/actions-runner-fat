@@ -11,7 +11,7 @@ Update image/Dockerfile using this requirements file.
 ## Requirements
 Use the file `image/Dockerfile_template` as a base for generating the image/Dockerfile. Insert the package/tools installations in the middle (see "This section is AI generated")
 
-1. Look at [VM document](https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2204-Readme.md) for what packages to include. Include every tool (unless a tool does not make sense in a container image).
+1. Look at [VM document](https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2404-Readme.md) for what packages to include. Include every tool (unless a tool does not make sense in a container image).
 1. The VM document may have several version of each tool. Only install the latest or stable version of each tool.
 1. Try to use only one `apt-get install` invocation. But feel free to group and comment the packages in the same command.
 1. Do not change the locale.

@@ -1,4 +1,7 @@
-FROM ghcr.io/actions/actions-runner:latest
+# Some files will be copied from the actions-runner image.
+FROM ghcr.io/actions/actions-runner:latest as baseimage
+
+FROM docker.io/library/ubuntu:24.04
 
 # The user that should execute the container
 ARG BASE_USER=runner
@@ -17,6 +20,20 @@ ENV DEBIAN_FRONTEND=noninteractive
 ###
 # End of AI generated section
 ###
+
+###
+# Setting the environment similar to ghcr.io/actions/actions-runner
+###
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends adduser sudo lsb-release gpg-agent software-properties-common apt-utils
+
+RUN adduser --disabled-password --gecos "" --uid 1001 ${BASE_USER} \
+    && usermod -aG sudo ${BASE_USER} \
+    && echo "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers \
+    && echo "Defaults env_keep += \"DEBIAN_FRONTEND\"" >> /etc/sudoers
+
+COPY --chown=${BASE_USER}:${BASE_USER} --from=baseimage /home/${BASE_USER} /home/${BASE_USER}/.
 
 ###
 # Podman installation
@@ -53,6 +70,12 @@ RUN mkdir -p /home/${BASE_USER}/.local/share/containers && \
 RUN chmod 0755 /usr/bin/newuidmap /usr/bin/newgidmap && \
     setcap cap_setuid=ep /usr/bin/newuidmap && \
     setcap cap_setgid=ep /usr/bin/newgidmap
+
+# Workaround for that skopeo cannot interact with the podman image storage.
+# While running "skopeo inspect containers-storage:alpine" you might get
+# "Error during unshare(...): Operation not permitted".
+# Setting CAP_SYS_ADMIN on skopeo binary allows it to access the podman image storage.
+RUN sudo setcap cap_sys_admin+ep /usr/bin/skopeo
 
 ENV _CONTAINERS_USERNS_CONFIGURED=""
 
