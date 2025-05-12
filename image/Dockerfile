@@ -12,31 +12,21 @@ USER root
 # Set non-interactive mode for apt-get to avoid prompts during installation
 ENV DEBIAN_FRONTEND=noninteractive
 
-###
-# This section is AI generated based on container-image-requirements.md
-###
-
-# Install packages from Ubuntu repositories
+# Packages listed under https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2404-Readme.md#installed-apt-packages
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends \
     ansible \
-    apt-transport-https \
-    apt-utils \
+    acl \
     aria2 \
     autoconf \
     automake \
-    bash \
     binutils \
     bison \
-    build-essential \
+    brotli \
     bzip2 \
-    ca-certificates \
-    clang \
-    cmake \
     coreutils \
     curl \
     dbus \
-    default-jdk \
     dnsutils \
     dpkg \
     dpkg-dev \
@@ -72,19 +62,23 @@ RUN apt-get update -y && \
     patchelf \
     pigz \
     pkg-config \
+    pollinate \
     python-is-python3 \
-    python3 \
-    python3-dev \
-    python3-pip \
-    python3-setuptools \
-    python3-venv \
     rpm \
     rsync \
     shellcheck \
+    sphinxsearch \
     sqlite3 \
     ssh \
     sshpass \
+    sudo \
+    swig \
+    systemd-coredump \
     tar \
+    telnet \
+    texinfo \
+    time \
+    tk \
     tree \
     tzdata \
     unzip \
@@ -93,8 +87,8 @@ RUN apt-get update -y && \
     xvfb \
     xz-utils \
     zip \
-    zlib1g-dev \
-    zstd && \
+    zsync \
+    && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Node.js (LTS version)
@@ -130,10 +124,6 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.
 # Install yq
 RUN wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 && \
     chmod +x /usr/local/bin/yq
-
-###
-# End of AI generated section
-###
 
 ###
 # Setting the environment similar to ghcr.io/actions/actions-runner
