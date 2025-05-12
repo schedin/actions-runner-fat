@@ -91,17 +91,30 @@ RUN apt-get update -y && \
     && \
     rm -rf /var/lib/apt/lists/*
 
+# Install more packages not included the VM image apt packages list above
+RUN apt-get update -y && \
+    apt-get install -y --no-install-recommends \
+    git \
+    && \
+    rm -rf /var/lib/apt/lists/*
+
 # Install Node.js (LTS version)
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get update -y && \
     apt-get install -y nodejs && \
     rm -rf /var/lib/apt/lists/*
 
-# Install Helm
-RUN curl -fsSL https://baltocdn.com/helm/signing.asc | gpg --dearmor | tee /usr/share/keyrings/helm.gpg > /dev/null && \
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | tee /etc/apt/sources.list.d/helm-stable-debian.list && \
+# Install Helm, https://github.com/actions/runner-images/blob/main/images/ubuntu/scripts/build/install-kubernetes-tools.sh
+RUN curl -fsSL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+
+# Install kubectl, https://github.com/actions/runner-images/blob/main/images/ubuntu/scripts/build/install-kubernetes-tools.sh
+RUN mkdir -p /etc/apt/keyrings && \
+    kubectl_minor_version=$(curl -fsSL "https://dl.k8s.io/release/stable.txt" | cut -d'.' -f1,2) && \
+    curl -fsSL https://pkgs.k8s.io/core:/stable:/$kubectl_minor_version/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg && \
+    echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/$kubectl_minor_version/deb/ /" > /etc/apt/sources.list.d/kubernetes.list && \
     apt-get update -y && \
-    apt-get install -y helm && \
+    apt-get install -y kubectl && \
+    rm -f /etc/apt/sources.list.d/kubernetes.list && \
     rm -rf /var/lib/apt/lists/*
 
 # Install AWS CLI
@@ -179,7 +192,8 @@ RUN chmod 0755 /usr/bin/newuidmap /usr/bin/newgidmap && \
 # While running "skopeo inspect containers-storage:alpine" you might get
 # "Error during unshare(...): Operation not permitted".
 # Setting CAP_SYS_ADMIN on skopeo binary allows it to access the podman image storage.
-RUN setcap cap_sys_admin+ep /usr/bin/skopeo
+#RUN setcap cap_sys_admin+ep /usr/bin/skopeo
+RUN setcap cap_setuid=ep /usr/bin/skopeo
 
 ENV _CONTAINERS_USERNS_CONFIGURED=""
 
