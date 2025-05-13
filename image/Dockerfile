@@ -193,6 +193,7 @@ RUN chmod 0755 /usr/bin/newuidmap /usr/bin/newgidmap && \
 # "Error during unshare(...): Operation not permitted".
 # Setting CAP_SYS_ADMIN on skopeo binary allows it to access the podman image storage.
 #RUN setcap cap_sys_admin+ep /usr/bin/skopeo
+
 RUN setcap cap_setuid=ep /usr/bin/skopeo
 
 ENV _CONTAINERS_USERNS_CONFIGURED=""
