@@ -1,5 +1,5 @@
 # Some files will be copied from the actions-runner image.
-FROM ghcr.io/actions/actions-runner:latest as baseimage
+FROM ghcr.io/actions/actions-runner:latest AS baseimage
 
 FROM docker.io/library/ubuntu:24.04
 
@@ -194,7 +194,8 @@ RUN chmod 0755 /usr/bin/newuidmap /usr/bin/newgidmap && \
 # Setting CAP_SYS_ADMIN on skopeo binary allows it to access the podman image storage.
 #RUN setcap cap_sys_admin+ep /usr/bin/skopeo
 
-RUN setcap cap_setuid=ep /usr/bin/skopeo
+RUN chmod 0755 /usr/bin/newuidmap && \
+    setcap cap_setuid=ep /usr/bin/skopeo
 
 ENV _CONTAINERS_USERNS_CONFIGURED=""
 
