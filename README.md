@@ -24,7 +24,7 @@ helm upgrade --install "${INSTALLATION_NAME}" \
     --set githubConfigSecret.github_token="${GITHUB_PAT}" \
     --set template.spec.containers[0].name=runner \
     --set template.spec.containers[0].image=ghcr.io/schedin/actions-runner-fat:latest \
-    --set template.spec.containers[0].command[0]="/home/runner/run.sh" \
+--set template.spec.containers[0].args[0]="/home/runner/run.sh" \
     oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
 ```
 
