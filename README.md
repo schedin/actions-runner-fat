@@ -29,7 +29,7 @@ helm upgrade --install "${INSTALLATION_NAME}" \
 ```
 
 ### Building containers inside the runner
-Podman and Skopeo are included in the image to enable building and pushing container images. The package podman-docker (a Docker-compatible CLI interface) is also installed so most `docker` commands can be used seamlessly. To be able to build container image the Pod spec needs the `--privileged` flag set. For example insert this line into the Helm command above:
+Podman and Skopeo are included in the image to enable building and pushing container images. The package podman-docker (a Docker-compatible CLI interface) is also installed so most `docker` commands can be used seamlessly. To be able to build container images the Pod spec needs the `--privileged` flag set. For example, insert this line into the Helm command above:
 ```bash
       --set template.spec.containers[0].securityContext.privileged=true \
 ```
