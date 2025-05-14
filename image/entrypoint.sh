@@ -11,8 +11,7 @@ fi
 # Create GitHub action directories if they don't exist
 # This helps when running Docker actions with Podman
 if [ -n "$GITHUB_WORKSPACE" ]; then
-  sudo mkdir -p /github/home /github/workflow /github/file_commands /github/workspace
-  sudo chown -R $(id -u):$(id -g) /github
+  mkdir -p /home/$(id -u)/_work/_temp/_github_home
 fi
 
 # Execute the command passed to the container
