@@ -196,8 +196,8 @@ RUN chmod 0755 /usr/bin/newuidmap /usr/bin/newgidmap && \
 # storage, while running in Kubernetes (Ubuntu and CRI-O as container runtime).
 # The downside of this is if you run this container image outside kubernetes,
 # with podman, you need to run it with --privileged, instead of just
-# --device /dev/fuse to use skopeo. See the entrypoint script with a workaround
-# for that.
+# --device /dev/fuse to be able to use skopeo. See the entrypoint script for a
+# workaround in that scenario.
 RUN setcap cap_sys_admin+ep /usr/bin/skopeo
 
 ENV _CONTAINERS_USERNS_CONFIGURED=""
@@ -206,5 +206,11 @@ ENV _CONTAINERS_USERNS_CONFIGURED=""
 # End of Podman installation section
 ###
 
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
 USER ${BASE_USER}
 WORKDIR /home/${BASE_USER}
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD ["/bin/bash"]
