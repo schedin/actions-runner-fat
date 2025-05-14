@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+echo "Running entrypoint.sh"
+
 # Test if skopeo works with current capabilities
 if ! skopeo  2>/dev/null; then
   # When running inside a normal Podman container with --device /dev/fuse we
@@ -9,13 +11,16 @@ if ! skopeo  2>/dev/null; then
 fi
 
 # Creating fake docker.sock to podman.sock file so GitHub Actions image builder works.
-#sudo mkdir -p /run/podman
-#sudo touch /run/podman/podman.sock
+ehco "Creating fake docker.sock to podman.sock file so GitHub Actions image builder works."
+sudo mkdir -p /run/podman
+sudo touch /run/podman/podman.sock
 
 # Create GitHub action directories if they don't exist
 # This helps when running Docker actions with Podman
-#echo "Running mkdir -p ${HOME}/_work/_temp/_github_home"
-#mkdir -p ${HOME}/_work/_temp/_github_home
+echo "Running mkdir -p ${HOME}/_work/_temp/_github_home"
+mkdir -p ${HOME}/_work/_temp/_github_home
+ls -l ${HOME}/_work/_temp/
+ls -l ${HOME}/_work/_temp/_github_home
 
 # Execute the command passed to the container
 exec "$@"
