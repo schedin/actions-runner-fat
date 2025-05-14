@@ -173,9 +173,10 @@ RUN apt-get update -y \
 RUN echo "${BASE_USER}:1002:64534" > /etc/subuid && \
     echo "${BASE_USER}:1002:64534" > /etc/subgid
 
-ARG _REPO_URL="https://raw.githubusercontent.com/containers/image_build/refs/heads/main/podman"
-ADD $_REPO_URL/containers.conf /etc/containers/containers.conf
-ADD $_REPO_URL/podman-containers.conf /home/${BASE_USER}/.config/containers/containers.conf
+# See https://raw.githubusercontent.com/containers/image_build/refs/heads/main/podman/containers.conf
+COPY etc_containers_containers.conf /etc/containers/containers.conf
+# See https://raw.githubusercontent.com/containers/image_build/refs/heads/main/podman/podman-containers.conf
+COPY user_.config_containers_containers.conf /home/${BASE_USER}/.config/containers/containers.conf
 COPY etc_containers_storage.conf /etc/containers/storage.conf
 
 RUN mkdir -p /home/${BASE_USER}/.local/share/containers && \
