@@ -11,7 +11,7 @@ if ! skopeo  2>/dev/null; then
 fi
 
 # Creating fake docker.sock to podman.sock file so GitHub Actions image builder works.
-ehco "Creating fake docker.sock to podman.sock file so GitHub Actions image builder works."
+echo "Creating fake docker.sock to podman.sock file so GitHub Actions image builder works."
 sudo mkdir -p /run/podman
 sudo touch /run/podman/podman.sock
 
