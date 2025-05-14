@@ -10,9 +10,7 @@ fi
 
 # Create GitHub action directories if they don't exist
 # This helps when running Docker actions with Podman
-if [ -n "$GITHUB_WORKSPACE" ]; then
-  mkdir -p /home/$(id -u)/_work/_temp/_github_home
-fi
+mkdir -p ${HOME}/_work/_temp/_github_home
 
 # Execute the command passed to the container
 exec "$@"
