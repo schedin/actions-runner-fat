@@ -192,11 +192,13 @@ RUN chmod 0755 /usr/bin/newuidmap /usr/bin/newgidmap && \
 # Workaround for that skopeo cannot interact with the podman image storage.
 # While running "skopeo inspect containers-storage:alpine" you might get
 # "Error during unshare(...): Operation not permitted".
-# Setting CAP_SYS_ADMIN on skopeo binary allows it to access the podman image storage.
-#RUN setcap cap_sys_admin+ep /usr/bin/skopeo
-
-RUN chmod 0755 /usr/bin/newuidmap && \
-    setcap cap_setuid=ep /usr/bin/skopeo
+# Setting CAP_SYS_ADMIN on skopeo binary allows it to access the podman image
+# storage, while running in Kubernetes (Ubuntu and CRI-O as container runtime).
+# The downside of this is if you run this container image outside kubernetes,
+# with podman, you need to run it with --privileged, instead of just
+# --device /dev/fuse to use skopeo. See the entrypoint script with a workaround
+# for that.
+RUN setcap cap_sys_admin+ep /usr/bin/skopeo
 
 ENV _CONTAINERS_USERNS_CONFIGURED=""
 
