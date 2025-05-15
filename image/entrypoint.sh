@@ -15,12 +15,35 @@ echo "Creating fake docker.sock to podman.sock file so GitHub Actions image buil
 sudo mkdir -p /run/podman
 sudo touch /run/podman/podman.sock
 
-# Create GitHub action directories if they don't exist
-# This helps when running Docker actions with Podman
-echo "Running mkdir -p ${HOME}/_work/_temp/_github_home"
-mkdir -p ${HOME}/_work/_temp/_github_home
-ls -l ${HOME}/_work/_temp/
-ls -l ${HOME}/_work/_temp/_github_home
+# # Create GitHub action directories if they don't exist
+# # This helps when running Docker actions with Podman
+# echo "Running mkdir -p ${HOME}/_work/_temp/_github_home"
+# mkdir -p ${HOME}/_work/_temp/_github_home
+# ls -l ${HOME}/_work/_temp/
+# ls -l ${HOME}/_work/_temp/_github_home
+
+
+echo "Creating docker wrapper script"
+cat > /tmp/docker-wrapper.sh <<EOF
+#!/bin/bash
+# Extract volume mount paths from arguments
+for arg in "\$@"; do
+  if [[ \$arg == -v* || \$arg == --volume* ]]; then
+    # Extract host path from volume mount
+    host_path=\$(echo \$arg | cut -d':' -f1 | sed 's/^-v //; s/^--volume //')
+    # Create directory if it doesn't exist
+    echo "Creating directory \$host_path"
+    mkdir -p \$host_path
+  fi
+done
+# Call the real podman command
+/usr/bin/podman "\$@"
+EOF
+
+chmod +x /tmp/docker-wrapper.sh
+sudo rm /usr/bin/docker
+sudo mv /tmp/docker-wrapper.sh /usr/bin/docker
+
 
 # Execute the command passed to the container
 exec "$@"
