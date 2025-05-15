@@ -165,8 +165,7 @@ RUN apt-get update -y \
     # Used to set file based capabilities for newuidmap/newgidmap to make Podman work
     libcap2-bin \
     # Podman and tools
-    podman fuse-overlayfs slirp4netns skopeo \
-    # podman-docker \
+    podman fuse-overlayfs slirp4netns skopeo buildah \
     # New CA certificates to be able to pull images from docker.io etc
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
@@ -221,8 +220,7 @@ RUN usermod -aG docker ${BASE_USER}
 ###
 # End of Docker installation section
 ###
-
-
+s
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
