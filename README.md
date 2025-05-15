@@ -7,7 +7,7 @@ This image has included most of the tools that exist in the [official GitHub Act
 ## Building the Image
 To build the container image locally:
 
-```bash 
+```bash
 docker build -t actions-runner-fat:latest image/.
 ```
 
@@ -24,7 +24,7 @@ helm upgrade --install "${INSTALLATION_NAME}" \
     --set githubConfigSecret.github_token="${GITHUB_PAT}" \
     --set template.spec.containers[0].name=runner \
     --set template.spec.containers[0].image=ghcr.io/schedin/actions-runner-fat:latest \
---set template.spec.containers[0].args[0]="/home/runner/run.sh" \
+    --set template.spec.containers[0].args[0]="/home/runner/run.sh" \
     oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
 ```
 
@@ -35,7 +35,7 @@ A Docker daemon is started and can be used both for building/pushing images and 
 
 To be able use the container features, the Pod spec needs the `--privileged` flag set. For example, insert this line into the Helm command above:
 ```bash
-      --set template.spec.containers[0].securityContext.privileged=true \
+    --set template.spec.containers[0].securityContext.privileged=true \
 ```
 
 ## Container vs. VM Considerations
