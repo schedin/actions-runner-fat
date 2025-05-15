@@ -43,27 +43,29 @@ fi
 # /usr/bin/podman "\$@"
 # EOF
 
-# chmod +x /tmp/docker-wrapper.sh
-# sudo rm /usr/bin/docker
-# sudo mv /tmp/docker-wrapper.sh /usr/bin/docker
-
+### Docker deamon section ###
 # Start dockerd in the background and redirect output to a log file
 sudo touch /var/log/dockerd.log && sudo chown $(whoami): /var/log/dockerd.log
 sudo /usr/bin/dockerd > /var/log/dockerd.log 2>&1 &
+DOCKERD_PID=$!
 
 # Wait for docker to start
-echo "Waiting for docker daemon to start..."
-timeout=30
+timeout=10000
 while ! docker info >/dev/null 2>&1; do
-  timeout=$((timeout - 1))
-  if [ $timeout -eq 0 ]; then
-    echo "Docker daemon failed to start within the timeout period"
-    exit 1
+  # Check if dockerd process is still running
+  if ! ps -p $DOCKERD_PID > /dev/null; then
+    echo "Docker daemon failed to start. Try adding --privileged to the container."
+    break
   fi
-  sleep 1
-done
-echo "Docker daemon started successfully"
 
+  timeout=$((timeout - 100))
+  if [ $timeout -eq 0 ]; then
+    echo "WARNING: Docker daemon did not start within the timeout period."
+    break
+  fi
+  sleep 0.1
+done
+### End of Docker deamon section ###
 
 # Execute the command passed to the container
 exec "$@"
