@@ -26,16 +26,19 @@ sudo touch /run/podman/podman.sock
 echo "Creating docker wrapper script"
 cat > /tmp/docker-wrapper.sh <<EOF
 #!/bin/bash
+
+ls -l ${HOME}/_work/_temp/
+
 # Extract volume mount paths from arguments
-for arg in "\$@"; do
-  if [[ \$arg == -v* || \$arg == --volume* ]]; then
-    # Extract host path from volume mount
-    host_path=\$(echo \$arg | cut -d':' -f1 | sed 's/^-v //; s/^--volume //')
-    # Create directory if it doesn't exist
-    echo "Creating directory \$host_path"
-    mkdir -p \$host_path
-  fi
-done
+# for arg in "\$@"; do
+#   if [[ \$arg == -v* || \$arg == --volume* ]]; then
+#     # Extract host path from volume mount
+#     host_path=\$(echo \$arg | cut -d':' -f1 | sed 's/^-v //; s/^--volume //')
+#     # Create directory if it doesn't exist
+#     echo "Creating directory \$host_path"
+#     mkdir -p \$host_path
+#   fi
+# done
 # Call the real podman command
 /usr/bin/podman "\$@"
 EOF
