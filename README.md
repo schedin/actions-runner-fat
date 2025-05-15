@@ -4,6 +4,8 @@ See [Managing self-hosted runners with Actions Runner Controller](https://docs.g
 It tries to be compatible with the official GitHub Actions Runner image: `ghcr.io/actions/actions-runner:latest` (see [Dockerfile for actions-runner](https://github.com/actions/runner/tree/main/images)).
 This image has included most of the tools that exist in the [official GitHub Actions runner Ubuntu VM image](https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2404-Readme.md).
 
+The `latest` tag of this image is built weekly for latest security updates.
+
 ## Building the Image
 To build the container image locally:
 
@@ -37,6 +39,9 @@ To be able use the container features, the Pod spec needs the `--privileged` fla
 ```bash
     --set template.spec.containers[0].securityContext.privileged=true \
 ```
+
+> [!NOTE]
+> It is possible to mount `/dev/fuse` instead of using the `--privileged` flag for Podman. But it is complicated to achieve in Kubernetes because it is not natively supported (see [#92114](https://github.com/kubernetes/kubernetes/issues/92114) and [#7890](https://github.com/kubernetes/kubernetes/issues/7890)).
 
 ## Container vs. VM Considerations
 This container is designed to be a lightweight alternative to the GitHub-hosted runners while still providing essential tools for CI/CD workflows. Unlike the full GitHub Actions VM image, which include multiple versions of each tool and language, this container focuses on providing the latest stable version of each tool to keep the image size manageable.
