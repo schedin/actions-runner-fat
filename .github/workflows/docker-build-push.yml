@@ -46,8 +46,8 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=sha,format=short
-            type=raw,value=latest,enable={{is_default_branch}}
-            type=raw,value=${{ steps.date.outputs.TAG }}
+            type=raw,value=latest,enable=${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+            type=raw,value=${{ steps.date.outputs.TAG }},enable=${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
             type=raw,value=testing,enable=${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
 
       - name: Log in to GitHub Container Registry
