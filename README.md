@@ -28,8 +28,12 @@ helm upgrade --install "${INSTALLATION_NAME}" \
     oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
 ```
 
-### Building containers inside the runner
-Podman and Skopeo are included in the image to enable building and pushing container images. The package podman-docker (a Docker-compatible CLI interface) is also installed so most `docker` commands can be used seamlessly. To be able to build container images the Pod spec needs the `--privileged` flag set. For example, insert this line into the Helm command above:
+### Building containers or executing GitHub Docker container actions
+Docker, Podman and Skopeo are included in the image to enable building and pushing container images.
+
+A Docker daemon is started and can be used both for building/pushing images and for executing GitHub Docker container actions.
+
+To be able use the container features, the Pod spec needs the `--privileged` flag set. For example, insert this line into the Helm command above:
 ```bash
       --set template.spec.containers[0].securityContext.privileged=true \
 ```
