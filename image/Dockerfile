@@ -1,5 +1,5 @@
 # Some files will be copied from the actions-runner image.
-FROM ghcr.io/actions/actions-runner:latest AS baseimage
+FROM ghcr.io/actions/actions-runner:latest AS actions-runner
 
 FROM docker.io/library/ubuntu:24.04
 
@@ -95,6 +95,7 @@ RUN apt-get update -y && \
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends \
     git \
+    less \
     && \
     rm -rf /var/lib/apt/lists/*
 
@@ -150,7 +151,7 @@ RUN adduser --disabled-password --gecos "" --uid 1001 ${BASE_USER} \
     && echo "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers \
     && echo "Defaults env_keep += \"DEBIAN_FRONTEND\"" >> /etc/sudoers
 
-COPY --chown=${BASE_USER}:${BASE_USER} --from=baseimage /home/${BASE_USER} /home/${BASE_USER}/.
+COPY --chown=${BASE_USER}:${BASE_USER} --from=actions-runner /home/${BASE_USER} /home/${BASE_USER}/.
 
 ###
 # Podman installation
@@ -164,7 +165,8 @@ RUN apt-get update -y \
     # Used to set file based capabilities for newuidmap/newgidmap to make Podman work
     libcap2-bin \
     # Podman and tools
-    podman fuse-overlayfs slirp4netns podman-docker skopeo \
+    podman fuse-overlayfs slirp4netns skopeo \
+    # podman-docker \
     # New CA certificates to be able to pull images from docker.io etc
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
@@ -205,6 +207,21 @@ ENV _CONTAINERS_USERNS_CONFIGURED=""
 ###
 # End of Podman installation section
 ###
+
+###
+# Docker installation
+###
+RUN apt-get update -y \
+    && apt-get install -y --no-install-recommends \
+    docker.io \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN usermod -aG docker ${BASE_USER}
+
+###
+# End of Docker installation section
+###
+
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
