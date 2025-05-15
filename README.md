@@ -1,8 +1,8 @@
 # Fat Actions Runner
 This container image is intended to be used by a self-hosted runner with the Actions Runner Controller (ARC) in Kubernetes.
 See [Managing self-hosted runners with Actions Runner Controller](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners-with-actions-runner-controller).
-It is built upon the official GitHub Actions Runner image: `ghcr.io/actions/actions-runner:latest` (see [Dockerfile for actions-runner](https://github.com/actions/runner/tree/main/images)).
-This image has included most of the tools that exist in the official GitHub Actions runner Ubuntu VM image.
+It tries to be compatible with the official GitHub Actions Runner image: `ghcr.io/actions/actions-runner:latest` (see [Dockerfile for actions-runner](https://github.com/actions/runner/tree/main/images)).
+This image has included most of the tools that exist in the [official GitHub Actions runner Ubuntu VM image](https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2404-Readme.md).
 
 ## Building the Image
 To build the container image locally:
@@ -29,7 +29,7 @@ helm upgrade --install "${INSTALLATION_NAME}" \
 ```
 
 ### Building containers or executing GitHub Docker container actions
-Docker, Podman and Skopeo are included in the image to enable building and pushing container images.
+Docker, Podman, Skopeo and Buildah are included in the image to enable building and pushing container images.
 
 A Docker daemon is started and can be used both for building/pushing images and for executing GitHub Docker container actions.
 
