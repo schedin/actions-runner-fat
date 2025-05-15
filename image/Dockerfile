@@ -220,7 +220,7 @@ RUN usermod -aG docker ${BASE_USER}
 ###
 # End of Docker installation section
 ###
-s
+
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
