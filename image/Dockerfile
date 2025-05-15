@@ -94,8 +94,11 @@ RUN apt-get update -y && \
 # Install more packages not included the VM image apt packages list above
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends \
+    ansible \
     git \
     less \
+    maven \
+    openjdk-21-jdk \
     && \
     rm -rf /var/lib/apt/lists/*
 
