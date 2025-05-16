@@ -2,7 +2,7 @@
 set -e
 
 # Test if skopeo works with current capabilities
-if ! skopeo  2>/dev/null; then
+if ! skopeo --version >/dev/null 2>&1; then
   # When running inside a normal Podman container with --device /dev/fuse we
   # need to remove the CAP_SYS_ADMIN capability from skopeo
   sudo setcap cap_sys_admin-ep /usr/bin/skopeo
