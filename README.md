@@ -43,5 +43,12 @@ To be able use the container features, the Pod spec needs the `--privileged` fla
 > [!NOTE]
 > It is possible to mount `/dev/fuse` instead of using the `--privileged` flag for Podman. But it is complicated to achieve in Kubernetes because it is not natively supported (see [#92114](https://github.com/kubernetes/kubernetes/issues/92114) and [#7890](https://github.com/kubernetes/kubernetes/issues/7890)).
 
+
+## Configuration/Environment Variables
+
+| Variable | Default | Description | Example |
+|----------|---------|-------------|---------|
+| `DISABLE_DOCKER_SERVICE` | `false` | When set to `true`, prevents the Docker daemon from starting. Useful where you only need Podman or want to reduce resource usage. | ```--set template.spec.containers[0].env[0].name=DISABLE_DOCKER_SERVICE<br/> --set template.spec.containers[0].env[0].value=true``` |
+
 ## Container vs. VM Considerations
 This container is designed to be a lightweight alternative to the GitHub-hosted runners while still providing essential tools for CI/CD workflows. Unlike the full GitHub Actions VM image, which include multiple versions of each tool and language, this container focuses on providing the latest stable version of each tool to keep the image size manageable.
