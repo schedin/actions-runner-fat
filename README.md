@@ -1,5 +1,5 @@
 # Fat Actions Runner
-This container image is intended to be used by a self-hosted runner with the Actions Runner Controller (ARC) in Kubernetes.
+This container image is intended to be used by a self-hosted runner with the Actions Runner Controller (ARC) in Kubernetes, or standalone as a general purpose build container.
 See [Managing self-hosted runners with Actions Runner Controller](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners-with-actions-runner-controller).
 It tries to be compatible with the official GitHub Actions Runner image: `ghcr.io/actions/actions-runner:latest` (see [Dockerfile for actions-runner](https://github.com/actions/runner/tree/main/images)).
 This image has included most of the tools that exist in the [official GitHub Actions runner Ubuntu VM image](https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2404-Readme.md).
@@ -46,9 +46,20 @@ To be able use the container features, the Pod spec needs the `--privileged` fla
 
 ## Configuration/Environment Variables
 
-| Variable | Default | Description | Example |
-|----------|---------|-------------|---------|
-| `DISABLE_DOCKER_SERVICE` | `false` | When set to `true`, prevents the Docker daemon from starting. Useful where you only need Podman or want to reduce resource usage. | ```--set template.spec.containers[0].env[0].name=DISABLE_DOCKER_SERVICE<br/> --set template.spec.containers[0].env[0].value=true``` |
+Example of setting environment variables in the Helm command:
+```bash
+    --set template.spec.containers[0].env[0].name=DISABLE_DOCKER_SERVICE \
+    --set template.spec.containers[0].env[0].value=true \
+```
+
+Example of setting environment variables using Podman or Docker:
+```bash
+docker run --rm -it -e DISABLE_DOCKER_SERVICE=true ghcr.io/schedin/actions-runner-fat:latest
+```
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `DISABLE_DOCKER_SERVICE` | `false` | When set to `true`, prevents the Docker daemon from starting. Useful where you only need Podman or want to reduce resource usage. |
 
 ## Container vs. VM Considerations
 This container is designed to be a lightweight alternative to the GitHub-hosted runners while still providing essential tools for CI/CD workflows. Unlike the full GitHub Actions VM image, which include multiple versions of each tool and language, this container focuses on providing the latest stable version of each tool to keep the image size manageable.
