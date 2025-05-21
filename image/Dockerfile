@@ -219,6 +219,11 @@ RUN apt-get update -y \
 
 RUN usermod -aG docker ${BASE_USER}
 
+# Additional configuration for Docker
+# Lowering MTU to 1450 to avoid network issues (e.g., TLS handshake hangs)
+# when running Docker inside Kubernetes pods with lower MTU (e.g., 1450).
+COPY etc_docker_daemon.json /etc/docker/daemon.json
+
 ###
 # End of Docker installation section
 ###
