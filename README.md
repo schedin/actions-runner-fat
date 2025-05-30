@@ -1,5 +1,5 @@
 # Fat Actions Runner
-This is a build container image that can be used to build applications, for example jar files. It can also build container images. The advanatge of a build container is that the build is deterministic. It also simplifies installation of build servers.
+This is a build container image that can be used to build applications, for example jar files. It can also build container images. The advantage of a build container is that the build is deterministic. It also simplifies installation of build servers.
 
 This container image is intended to be used by a self-hosted runner with the Actions Runner Controller (ARC) in Kubernetes, or standalone as a general purpose build container.
 See [Managing self-hosted runners with Actions Runner Controller](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners-with-actions-runner-controller).
@@ -37,7 +37,7 @@ Docker, Podman, Skopeo and Buildah are included in the image to enable building 
 
 A Docker daemon is started and can be used both for building/pushing images and for executing GitHub Docker container actions.
 
-To be able use the container features, the Pod spec needs the `--privileged` flag set. For example, insert this line into the Helm command above:
+To be able to use the container features, the Pod spec needs the `--privileged` flag set. For example, insert this line into the Helm command above:
 ```bash
     --set template.spec.containers[0].securityContext.privileged=true \
 ```
@@ -64,4 +64,4 @@ docker run --rm -it -e DISABLE_DOCKER_SERVICE=true ghcr.io/schedin/actions-runne
 | `DISABLE_DOCKER_SERVICE` | `false` | When set to `true`, prevents the Docker daemon from starting. Useful where you only need Podman or want to reduce resource usage. |
 
 ## Container vs. VM Considerations
-This container is designed to be a lightweight alternative to the GitHub-hosted runners while still providing essential tools for CI/CD workflows. Unlike the full GitHub Actions VM image, which include multiple versions of each tool and language, this container focuses on providing the latest stable version of each tool to keep the image size manageable.
+This container is designed to be a lightweight alternative to the GitHub-hosted runners while still providing essential tools for CI/CD workflows. Unlike the full GitHub Actions VM image, which includes multiple versions of each tool and language, this container focuses on providing the latest stable version of each tool to keep the image size manageable.
