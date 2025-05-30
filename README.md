@@ -1,4 +1,6 @@
 # Fat Actions Runner
+This is a build container image that can be used to build applications, for example jar files. It can also build container images. The advanatge of a build container is that the build is deterministic. It also simplifies installation of build servers.
+
 This container image is intended to be used by a self-hosted runner with the Actions Runner Controller (ARC) in Kubernetes, or standalone as a general purpose build container.
 See [Managing self-hosted runners with Actions Runner Controller](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners-with-actions-runner-controller).
 It tries to be compatible with the official GitHub Actions Runner image: `ghcr.io/actions/actions-runner:latest` (see [Dockerfile for actions-runner](https://github.com/actions/runner/tree/main/images)).
