@@ -8,6 +8,8 @@ This image has included most of the tools that exist in the [official GitHub Act
 
 The `latest` tag of this image is built weekly for latest security updates.
 
+https://github.com/user-attachments/assets/c718148e-08bc-4ad9-a3ed-9c951fa992c7
+
 ## Building the Image
 To build the container image locally:
 
